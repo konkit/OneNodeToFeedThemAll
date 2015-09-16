@@ -1,21 +1,23 @@
 var express = require('express');
 var Twit = require('twit');
 var passport = require('passport')
-  , FacebookStrategy = require('passport-facebook').Strategy;
+  , FacebookStrategy = require('passport-facebook').Strategy
+  , TwitterStrategy = require('passport-twitter').Strategy
 var restler = require('restler');
 var util = require('util');
 
-var T = new Twit({
-    consumer_key:         '4qf5IouYYD554s5PN02pdMui7'
-  , consumer_secret:      'QEwsLu0IN8QJlWAsT1AfFE5uG5c9ie6AERnMOmSIHTENYhg5bY'
-  , access_token:         '49361574-eH0zW35v0wc82h4kSEnHKx1VwahvlA93eJHpNa0T8'
-  , access_token_secret:  '9rE6oyAHdxxF2a0iq9m9D3csZCaVrJZpVfOBPzdD42oqs'
-});
-
-var facebookAuthToken = null;
+var T = null;
 
 var app = express();
-app.use(express.static('public'));
+// Use application-level middleware for common functionality, including
+// logging, parsing, and session handling.
+app.use(require('morgan')('combined'));
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+
+// Initialize Passport and restore authentication state, if any, from the
+// session.
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -27,6 +29,7 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
+var facebookAuthToken = null;
 passport.use(new FacebookStrategy({
     clientID: '198776883637263',
     clientSecret: '77b1d915639b2c2b6c08db5d7b011cbb',
@@ -39,13 +42,51 @@ passport.use(new FacebookStrategy({
   }
 ));
 
+passport.use(new TwitterStrategy({
+    consumerKey: '4qf5IouYYD554s5PN02pdMui7',
+    consumerSecret: 'QEwsLu0IN8QJlWAsT1AfFE5uG5c9ie6AERnMOmSIHTENYhg5bY',
+    callbackURL: "http://localhost:3000/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, done) {
+    twitterToken = token;
+    twitterTokenSecret = tokenSecret;
 
+    console.log('token: ' + twitterToken + ', tokenSecret: ' + twitterTokenSecret);
+
+    T = new Twit({
+        consumer_key:         '4qf5IouYYD554s5PN02pdMui7'
+      , consumer_secret:      'QEwsLu0IN8QJlWAsT1AfFE5uG5c9ie6AERnMOmSIHTENYhg5bY'
+      , access_token:         token
+      , access_token_secret:  tokenSecret
+    });
+
+
+    done(null, profile);
+  }
+));
+
+app.get(
+  '/auth/twitter',
+  passport.authenticate('twitter')
+);
+
+app.get('/auth/twitter/callback',
+  passport.authenticate('twitter', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/twitter_feed');
+  });
 
 app.get('/twitter_feed', function (req, res) {
+  if( T == null ) {
+    return res.redirect('/auth/twitter');
+  }
+
   T.get('statuses/home_timeline/konkit', { count: 100 }, function(err, data, response) {
     res.send(data);
   })
 });
+
+
 
 app.get('/facebook_feed', function(req, res) {
   if( facebookAuthToken == null ) {
@@ -67,9 +108,7 @@ app.get('/facebook_feed', function(req, res) {
 app.get(
   '/auth/facebook',
   passport.authenticate('facebook',
-    {
-      scope: ['user_status', 'user_posts', 'read_stream']
-    }
+    { scope: ['user_status', 'user_posts', 'read_stream'] }
   )
 );
 

@@ -10,21 +10,25 @@ module.exports = function(app, passport) {
       callbackURL: "http://localhost:3000/auth/facebook/callback"
     },
     function(accessToken, refreshToken, profile, done) {
-      facebookAuthToken = accessToken;
-      console.log('facebookAuthToken: ' + facebookAuthToken);
-      done(null, profile);
+      user = {
+        type: 'facebook',
+        id: profile.id,
+        username: profile.displayName,
+        facebookToken: accessToken
+      }
+      done(null, user);
     }
   ));
 
 
   app.get('/facebook_feed', function(req, res) {
-    if( facebookAuthToken == null ) {
+    if( typeof req.session.passport !== 'object' ) {
       return res.redirect('/auth/facebook');
     }
 
     base_url = 'https://graph.facebook.com/v2.3/'
     url = base_url + 'me/home/?'
-    url = url + 'access_token=' + facebookAuthToken
+    url = url + 'access_token=' + req.session.passport.user.facebookToken
     url = url + '&fields=from,story,picture,description,link,message,created_time,updated_time'
     restler.get(url).on('complete', function(fbResult) {
       console.log('URL: ' + url)

@@ -1,8 +1,6 @@
-module.exports = function(app, passport) {
+module.exports = function(app, passport, User) {
   var restler = require('restler');
   var FacebookStrategy = require('passport-facebook').Strategy
-
-  exports.facebookAuthToken = facebookAuthToken = null;
 
   passport.use(new FacebookStrategy({
       clientID: '198776883637263',
@@ -16,10 +14,10 @@ module.exports = function(app, passport) {
         username: profile.displayName,
         facebookToken: accessToken
       }
+      User.findOneOrCreate({id: user.id, type: user.type}, user, function(err, person) {});
       done(null, user);
     }
   ));
-
 
   app.get('/facebook_feed', function(req, res) {
     if( typeof req.session.passport !== 'object' ) {
@@ -36,7 +34,6 @@ module.exports = function(app, passport) {
       res.send(fbResult);
     })
   });
-
 
   app.get(
     '/auth/facebook',

@@ -6,43 +6,49 @@ var path = require('path');
 var session = require('express-session')
 sessionStore = new session.MemoryStore;
 
+var mongoose = require('mongoose');
+
+var db = mongoose.connection;
 var app = express();
-// Express middleware
-app.use(require('morgan')('combined'));
-app.use(require('cookie-parser')());
-app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(session({ store: sessionStore, secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 
-// Initialize Passport session
-app.use(passport.initialize());
-app.use(passport.session());
+db.on('error', console.error);
+db.once('open', function() {
+    // Express middleware
+    app.use(require('morgan')('combined'));
+    app.use(require('cookie-parser')());
+    app.use(require('body-parser').urlencoded({ extended: true }));
+    app.use(session({ store: sessionStore, secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+    app.use(express.static(path.join(__dirname, 'public')));
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
+    // Initialize Passport session
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    passport.serializeUser(function(user, done) {
+      done(null, user);
+    });
+
+    passport.deserializeUser(function(user, done) {
+      done(null, user);
+    });
+
+    // Init routes
+    var routes = require('./routes/index');
+    var users = require('./routes/users');
+
+    app.use('/', routes);
+    app.use('/users', users);
+
+    // Init views
+    app.set('views', path.join(__dirname, 'views'));
+    app.set('view engine', 'jade');
+
+    // Add handling FB and Twitter
+    User = require('./modelUser.js')(mongoose);
+
+    facebook = require('./facebook.js')(app, passport, User);
+    twitter = require('./twitter.js')(app, passport, User);
 });
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
-
-
-
-// Init routes
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
-app.use('/', routes);
-app.use('/users', users);
-
-// Init views
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-// Add handling FB and Twitter
-facebook = require('./facebook.js')(app, passport);
-twitter = require('./twitter.js')(app, passport);
-
-
+mongoose.connect('mongodb://localhost/test');
 
 module.exports = app;

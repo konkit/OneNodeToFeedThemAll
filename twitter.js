@@ -1,4 +1,4 @@
-module.exports = function(app, passport) {
+module.exports = function(app, passport, User) {
   var TwitterStrategy = require('passport-twitter').Strategy
   var Twit = require('twit');
 
@@ -11,9 +11,11 @@ module.exports = function(app, passport) {
       user = {
         id: profile.id,
         username: profile.screen_name,
+        type: 'twitter',
         twitterToken: token,
         twitterSecret: tokenSecret
       }
+      User.findOneOrCreate({id: user.id, type: user.type}, user, function(err, person) {});
       done(null, user);
     }
   ));

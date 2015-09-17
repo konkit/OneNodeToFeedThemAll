@@ -45,6 +45,7 @@ db.once('open', function() {
 
     // Add handling FB and Twitter
     User = require('./modelUser.js')(mongoose);
+    Post = require('./modelPost.js')(mongoose);
 
     facebook = require('./facebook.js')(app, passport, User);
     twitter = require('./twitter.js')(app, passport, User);

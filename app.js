@@ -1,55 +1,36 @@
-var express = require('express');
+var express  = require('express');
+var app      = express();
+var port     = process.env.PORT || 3000;
+var mongoose = require('mongoose');
 var passport = require('passport');
-var util = require('util');
+var flash    = require('connect-flash');
 var path = require('path');
+
+// Mongo setup
+var configDB = require('./config/database.js');
+mongoose.connect(configDB.url); // connect to our database
+
+require('./config/passport')(passport); // pass passport for configuration
 
 var session = require('express-session')
 sessionStore = new session.MemoryStore;
 
-var mongoose = require('mongoose');
+// set up express
+app.use(require('morgan')('combined')); // logging
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.set('view engine', 'ejs');          // set up ejs for templating
+app.use(session({ store: sessionStore, secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
-var db = mongoose.connection;
-var app = express();
+// static files
+app.use(express.static(path.join(__dirname, 'public')));
 
-db.on('error', console.error);
-db.once('open', function() {
-    // Express middleware
-    app.use(require('morgan')('combined'));
-    app.use(require('cookie-parser')());
-    app.use(require('body-parser').urlencoded({ extended: true }));
-    app.use(session({ store: sessionStore, secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-    app.use(express.static(path.join(__dirname, 'public')));
+// routes
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-    // Initialize Passport session
-    app.use(passport.initialize());
-    app.use(passport.session());
-
-    passport.serializeUser(function(user, done) {
-      done(null, user);
-    });
-
-    passport.deserializeUser(function(user, done) {
-      done(null, user);
-    });
-
-    // Init routes
-    var routes = require('./routes/index');
-    var users = require('./routes/users');
-
-    app.use('/', routes);
-    app.use('/users', users);
-
-    // Init views
-    app.set('views', path.join(__dirname, 'views'));
-    app.set('view engine', 'jade');
-
-    // Add handling FB and Twitter
-    User = require('./modelUser.js')(mongoose);
-    Post = require('./modelPost.js')(mongoose);
-
-    facebook = require('./facebook.js')(app, passport, User);
-    twitter = require('./twitter.js')(app, passport, User);
-});
-mongoose.connect('mongodb://localhost/test');
-
-module.exports = app;
+// launch
+app.listen(port);
+console.log('The magic happens on port ' + port);

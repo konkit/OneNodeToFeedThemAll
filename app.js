@@ -4,7 +4,7 @@ var port     = process.env.PORT || 3000;
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
-var path = require('path');
+var path     = require('path');
 
 // Mongo setup
 var configDB = require('./config/database.js');
@@ -19,11 +19,13 @@ sessionStore = new session.MemoryStore;
 app.use(require('morgan')('combined')); // logging
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
-app.set('view engine', 'ejs');          // set up ejs for templating
 app.use(session({ store: sessionStore, secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+// set up ejs for templating
+app.set('view engine', 'ejs');
 
 // static files
 app.use(express.static(path.join(__dirname, 'public')));

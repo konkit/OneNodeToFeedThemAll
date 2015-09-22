@@ -12,8 +12,8 @@ module.exports = function(app, passport) {
 			res.redirect('/');
 		}
 
-		res.render('profile.ejs', {
-			user : req.user
+		res.render('dashboard.ejs', {
+			user: req.user
 		});
 	});
 

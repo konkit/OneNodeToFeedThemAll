@@ -23,11 +23,11 @@ Post = mongoose.model('Post')
       result.forEach(function(post) {
         Post.findOneOrCreate({id: post.id, type: 'facebook'}, {
           id: post.id,
-          date: post.createdDate,
+          date: (new Date(post.created_time)).toISOString(),
           type: 'facebook',
           feedData: post,
           user: user
-        }, function(err, post) {
+        }, function(err, createdPost) {
           if( err ) console.log('!Error: ' + err)
         })
       })

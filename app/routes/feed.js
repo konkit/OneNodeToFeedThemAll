@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
       if( err ) console.log(err);
 
       var query = Post.find({user: user._id});
-      query.sort('date');
+      query.sort('-date');
       query.exec(function(err, posts) {
         res.send(posts)
       });

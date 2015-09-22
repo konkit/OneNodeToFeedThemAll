@@ -35,11 +35,9 @@ Post = mongoose.model('Post')
       }
 
       result.forEach(function(post) {
-        console.log(post);
-
         Post.findOneOrCreate({id: post.id, type: 'twitter'}, {
           id: post.id,
-          date: post.created_at,
+          date: (new Date(post.created_at)).toISOString(),
           type: 'twitter',
           feedData: post,
           user: user

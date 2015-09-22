@@ -21,7 +21,7 @@ Post = mongoose.model('Post')
 
 
       result.forEach(function(post) {
-        Post.findOneOrCreate({id: post.id}, {
+        Post.findOneOrCreate({id: post.id, type: 'facebook'}, {
           id: post.id,
           date: post.createdDate,
           type: 'facebook',
@@ -42,9 +42,9 @@ Post = mongoose.model('Post')
     });
   }
 
-module.exports = function() {
+module.exports = function(timeout) {
   intervalFunction();
   setInterval(function() {
     intervalFunction();
-  }, 10000);
+  }, timeout);
 }

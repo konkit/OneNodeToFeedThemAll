@@ -60,16 +60,22 @@
 
 			<div class="col-sm-9">
 				<div ng-repeat="feed in feedData">
-					<p>
-						[{{feed.type}}] {{feed.feedData.description}}
-					</p>
-					<p>
-						{{feed.feedData.message}}
-					</p>
-					<p>
-						<img ng-src="{{feed.feedData.picture}}" alt="img" />
-					</p>
-					<hr />
+
+					<div ng-show="feed.type == 'facebook'">
+						<p>[ {{feed.type}} ] {{feed.feedData.description}}</p>
+						<p>{{feed.feedData.message}}</p>
+						<p><img ng-src="{{feed.feedData.picture}}" alt="img" /></p>
+						<hr />
+					</div>
+
+					<div ng-show="feed.type == 'twitter'">
+						<p><b>User: {{feed.feedData.user.screen_name}}</b></p>
+						<p>[ {{feed.type}} ] {{feed.feedData.text}}</p>
+						<p>{{feed.feedData.source}}</p>
+						<p><img ng-src="{{feed.feedData.picture}}" alt="img" /></p>
+						<hr />
+					</div>
+
 				</div>
 			</div>
 

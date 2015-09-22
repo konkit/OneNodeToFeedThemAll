@@ -15,7 +15,9 @@ module.exports = function(app, passport) {
     User.findById(req.session.passport.user, function(err, user) {
       if( err ) console.log(err);
 
-      Post.find({user: user._id}, function(err, posts) {
+      var query = Post.find({user: user._id});
+      query.sort('date');
+      query.exec(function(err, posts) {
         res.send(posts)
       });
     });

@@ -33,7 +33,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-require('./feedWorker.js')(10000);
+require('./facebookFeedWorker.js')(10000);
+require('./twitterFeedWorker.js')(100000);
 
 // launch
 app.listen(port);

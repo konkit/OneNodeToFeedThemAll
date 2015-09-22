@@ -25,4 +25,5 @@ module.exports = function(app, passport) {
 	require('./routes/auth.js')(app, passport);
 	require('./routes/authorize.js')(app, passport);
 	require('./routes/unlink.js')(app, passport);
+	require('./routes/feed.js')(app, passport);
 };

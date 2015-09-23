@@ -7,7 +7,8 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-sanitize.js"></script>
   <script src="core.js"></script>
 </head>
 
@@ -61,18 +62,18 @@
 				<div ng-repeat="feed in feedData">
 
 					<div ng-show="feed.type == 'facebook'">
-						<p><i class="fa fa-facebook"></i>  <b>User: {{feed.feedData.from.name}}</b> {{feed.date | date : 'medium' }}</p>
+						<p><i class="fa fa-facebook"></i>  <b>{{feed.feedData.from.name}}</b> {{feed.date | date : 'medium' }}</p>
+						<p><i ng-show="feed.feedData.story">{{feed.feedData.story}}</i></p>
 						<p>{{feed.feedData.description}}</p>
 						<p>{{feed.feedData.message}}</p>
-						<p><img ng-src="{{feed.feedData.picture}}" alt="img" /></p>
+						<p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p>
 						<hr />
 					</div>
 
 					<div ng-show="feed.type == 'twitter'">
-						<p><i class="fa fa-twitter"></i>  <b>{{feed.feedData.user.screen_name}}</b> {{feed.date | date : 'medium' }}</p>
-						<p>{{feed.feedData.text}}</p>
-						<p ng-bind-html="feed.feedData.source"></p>
-						<p><img  ng-src="{{feed.feedData.picture}}" alt="img" /></p>
+						<p><i class="fa fa-twitter"></i>  <b ng-bind-html='feed.feedData.source'></b> {{feed.date | date : 'medium' }}</p>
+						<p ng-bind-html='feed.feedData.text | linky'></p>
+						<p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p>
 						<hr />
 					</div>
 

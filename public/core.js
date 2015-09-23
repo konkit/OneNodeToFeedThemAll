@@ -1,5 +1,5 @@
 // public/core.js
-var scotchTodo = angular.module('oneNodeToFeedThemAll', []);
+var oneNodeToFeedThemAll = angular.module('oneNodeToFeedThemAll', ['ngSanitize']);
 
 function updateFeeds($scope, $http) {
   console.log('Interval');
@@ -15,11 +15,11 @@ function updateFeeds($scope, $http) {
     });
 }
 
-function mainController($scope, $http) {
+oneNodeToFeedThemAll.controller('mainController', ['$scope', '$http', function($scope, $http) {
 
   updateFeeds($scope, $http);
 
   setInterval(function() {
     updateFeeds($scope, $http);
   }, 10000);
-}
+}]);

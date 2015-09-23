@@ -1,7 +1,7 @@
 module.exports = {
 	'facebookAuth' : {
-		'clientID' 		 : '198776883637263',
-		'clientSecret' : '77b1d915639b2c2b6c08db5d7b011cbb',
+		'clientID' 		 : process.env.FB_TOKEN  || '529876247193990',
+		'clientSecret' : process.env.FB_SECRET || 'e624d3b5dd5b87a01ba2f9f8f9111ecb',
 		'callbackURL'  : ( process.env.SERVER_URL || 'http://localhost:3000') + '/auth/facebook/callback'
 	},
 	'twitterAuth' : {

@@ -12,14 +12,13 @@ Post = mongoose.model('Post')
     url = base_url + action + '?access_token=' + fbToken
     url = url + '&fields=from,story,picture,description,link,message,created_time,updated_time'
     restler.get(url).on('complete', function(fbResult) {
+      console.log(fbResult.data);
       resultCallback(fbResult.data);
     })
   }
 
   function saveUserFeed(user) {
     getFBFeed(user.facebook.token, function(result) {
-
-
       result.forEach(function(post) {
         Post.findOneOrCreate({id: post.id, type: 'facebook'}, {
           id: post.id,

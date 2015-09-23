@@ -1,7 +1,7 @@
 <!doctype html>
 <html ng-app="oneNodeToFeedThemAll">
 <head>
-	<title>Node Authentication</title>
+	<title>One node to feed them all - your all feeds in one place!</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
 
@@ -15,7 +15,7 @@
 	<nav class="navbar navbar-default navbar-static-top">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="#">Project name</a>
+        <a class="navbar-brand" href="#">One node to feed them all</a>
       </div>
 
 			<div id="navbar" class="navbar-collapse collapse">
@@ -29,7 +29,6 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-3">
-
 				<div class="well">
 					<h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
 					<% if (user.facebook.token) { %>
@@ -62,19 +61,18 @@
 				<div ng-repeat="feed in feedData">
 
 					<div ng-show="feed.type == 'facebook'">
-						<p>	Date: {{feed.date}}	</p>
-						<p>[ {{feed.type}} ] {{feed.feedData.description}}</p>
+						<p><i class="fa fa-facebook"></i>  <b>User: {{feed.feedData.from.name}}</b> {{feed.date | date : 'medium' }}</p>
+						<p>{{feed.feedData.description}}</p>
 						<p>{{feed.feedData.message}}</p>
 						<p><img ng-src="{{feed.feedData.picture}}" alt="img" /></p>
 						<hr />
 					</div>
 
 					<div ng-show="feed.type == 'twitter'">
-						<p>	Date: {{feed.date}}	</p>
-						<p><b>User: {{feed.feedData.user.screen_name}}</b></p>
-						<p>[ {{feed.type}} ] {{feed.feedData.text}}</p>
-						<p>{{feed.feedData.source}}</p>
-						<p><img ng-src="{{feed.feedData.picture}}" alt="img" /></p>
+						<p><i class="fa fa-twitter"></i>  <b>{{feed.feedData.user.screen_name}}</b> {{feed.date | date : 'medium' }}</p>
+						<p>{{feed.feedData.text}}</p>
+						<p ng-bind-html="feed.feedData.source"></p>
+						<p><img  ng-src="{{feed.feedData.picture}}" alt="img" /></p>
 						<hr />
 					</div>
 

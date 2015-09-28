@@ -29,6 +29,28 @@ oneNodeToFeedThemAll.controller('mainController', ['$scope', '$http', function($
   updateFeeds($scope, $http);
   fetchRssFeeds($scope, $http);
 
+  $scope.addNewRssFeed = function() {
+    $scope.rssAlert = null;
+    $http.post('/api/rssFeeds', {url: $scope.newRssFeedUrl}, {dataType: "json"} )
+      .success(function(data) {
+        fetchRssFeeds($scope, $http);
+      })
+      .error(function(data) {
+        $scope.rssAlert = data.error.message;
+      });
+  }
+
+  $scope.removeNewRssFeed = function(valueToRemove) {
+    $scope.rssAlert = null;
+    $http.post('/api/rssFeeds/remove', {url: valueToRemove}, {dataType: "json"} )
+      .success(function(data) {
+        fetchRssFeeds($scope, $http);
+      })
+      .error(function(data) {
+        console.log('error: '); console.log(data);
+      });
+  }
+
   setInterval(function() {
     updateFeeds($scope, $http);
   }, 10000);

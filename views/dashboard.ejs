@@ -58,14 +58,27 @@
 
 				<div class="well">
 					<h3 class="text-info"><span class="fa fa-rss"></span> RSS</h3>
+
+					<div class="alert alert-danger alert-dismissable" ng-show="rssAlert.length > 0">
+						{{rssAlert}}
+					</div>
+
 					<p>
 						<ul>
-							<li ng-repeat="rssFeed in rssFeeds">
-
+							<li ng-repeat="rssFeed in userRssFeeds">
+								{{rssFeed}}
+								<a href="" class="glyphicon glyphicon-remove" ng-click="removeNewRssFeed(rssFeed)"></a>
 							</li>
 						</ul>
 					</p>
-					<button class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>  Add new RSS</button>
+					<div class="input-group">
+						<input class="form-control" type="text" ng-model="newRssFeedUrl" />
+						<span class="input-group-btn">
+							<button class="btn btn-success" ng-click="addNewRssFeed()">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</span>
+					</div>
 				</div>
 
 			</div>

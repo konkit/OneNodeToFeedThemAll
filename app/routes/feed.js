@@ -6,8 +6,6 @@ module.exports = function(app, passport) {
   Post = mongoose.model('Post')
 
   app.get('/api/feeds/', function(req, res) {
-    // eval(require('locus'))
-
     if( typeof req.session.passport == 'undefined' ) {
       return res.send('Please log in first');
     }

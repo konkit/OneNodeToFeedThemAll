@@ -18,7 +18,7 @@ sessionStore = new session.MemoryStore;
 // set up express
 app.use(require('morgan')('combined')); // logging
 app.use(require('cookie-parser')());
-app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('body-parser').json());
 app.use(session({ store: sessionStore, secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -31,7 +31,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
-require('./app/routes.js')(app, express, passport); // load our routes and pass in our app and fully configured passport
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 require('./workers/facebookFeedWorker.js')(10000);
 require('./workers/twitterFeedWorker.js')(100000);

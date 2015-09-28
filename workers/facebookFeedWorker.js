@@ -21,7 +21,7 @@ Post = mongoose.model('Post')
 
   function saveUserFeed(user) {
     getFBFeed(user.facebook.token, function(result) {
-      console.log('FB result : ' + result);
+      //console.log('FB result : ' + result);
 
       result.forEach(function(post) {
         Post.findOneOrCreate({id: post.id, type: 'facebook'}, {

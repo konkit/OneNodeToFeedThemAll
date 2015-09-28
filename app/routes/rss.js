@@ -1,26 +1,54 @@
-module.exports = function(app, express, passport) {
-  var rssRouter = express.Router();
+module.exports = function(app, passport) {
+  mongoose = require('mongoose');
 
-  rssRouter.use(function(req, res, next) {
+  User = mongoose.model('User')
+  Post = mongoose.model('Post')
+
+  function sendError(req, res, err) {
+    console.log("!!!");
+    console.log("Error: " + err);
+    console.log("!!!");
+    return res.status(400).send({error: err});
+  }
+
+  app.get('/api/rssFeeds', function(req, res) {
     if( typeof req.session.passport == 'undefined' ) {
       return res.send('Please log in first');
     }
-    next();
+    User.findById( req.session.passport.user, function(err, user) {
+      if( err ) { return sendError(req, res, err); }
+      res.send(user.rssFeeds)
+    });
   });
 
-  rssRouter.route('/rssFeeds')
-    .get(function(req, res) {
-      User.findById( req.session.passport.user, function(err, user) {
-        if( err ) console.log(err);
-        res.send(user.rssFeeds)
+  app.post('/api/rssFeeds', function(req, res) {
+    if( typeof req.session.passport == 'undefined' ) {
+      return res.send('Please log in first');
+    }
+    User.findById( req.session.passport.user, function(err, user) {
+      if( err ) {  return sendError(req, res, err); }
+      user.rssFeeds.addToSet( req.body.url )
+      user.save(function(err) {
+        if( err ) { return sendError(req, res, err); }
+        res.sendStatus(200);
       });
-    })
-    .post(function(req, res) {
-      User.update(
-        { id: req.session.passport.user },
-        { $addToSet: { rssFeeds: req.body.rssFeed.url } }
-      ).exec();
-    })
+    });
+  });
 
-  app.use('/api', rssRouter);
+  app.post('/api/rssFeeds/remove', function(req, res) {
+    if( typeof req.session.passport == 'undefined' ) {
+      return res.send('Please log in first');
+    }
+    User.findById( req.session.passport.user, function(err, user) {
+      if( err ) {  return sendError(req, res, err); }
+      user.rssFeeds.pull(req.body.url)
+
+      eval(require('locus'))
+
+      user.save(function(err) {
+        if( err ) { return sendError(req, res, err); }
+        res.sendStatus(200);
+      });
+    });
+  });
 }

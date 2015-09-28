@@ -31,10 +31,10 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./app/routes.js')(app, express, passport); // load our routes and pass in our app and fully configured passport
 
-require('./facebookFeedWorker.js')(10000);
-require('./twitterFeedWorker.js')(100000);
+require('./workers/facebookFeedWorker.js')(10000);
+require('./workers/twitterFeedWorker.js')(100000);
 
 // launch
 app.listen(port);

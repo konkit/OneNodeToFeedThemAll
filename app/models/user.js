@@ -14,7 +14,8 @@ var userSchema = mongoose.Schema({
         tokenSecret : String,
         displayName : String,
         username    : String
-    }
+    },
+    rssFeeds: [ String ]
 });
 
 userSchema.methods.generateHash = function(password) {

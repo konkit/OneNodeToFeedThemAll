@@ -1,7 +1,7 @@
 restler = require('restler');
 mongoose = require('mongoose');
 
-require('./app/models/post');
+require('../app/models/post');
 
 User = mongoose.model('User')
 Post = mongoose.model('Post')

@@ -1,4 +1,4 @@
-module.exports = function(app, passport) {
+module.exports = function(app, express, passport) {
 	// home page
 	app.get('/', function(req, res) {
 		if( req.isAuthenticated() ) {
@@ -26,4 +26,5 @@ module.exports = function(app, passport) {
 	require('./routes/authorize.js')(app, passport);
 	require('./routes/unlink.js')(app, passport);
 	require('./routes/feed.js')(app, passport);
+	require('./routes/rss.js')(app, express, passport);
 };

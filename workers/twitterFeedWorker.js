@@ -2,9 +2,9 @@ restler = require('restler');
 mongoose = require('mongoose');
 var Twit = require('twit')
 
-require('./app/models/post');
+require('../app/models/post');
 
-var configAuth = require('./config/auth');
+var configAuth = require('../config/auth');
 
 User = mongoose.model('User')
 Post = mongoose.model('Post')

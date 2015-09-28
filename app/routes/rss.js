@@ -42,9 +42,6 @@ module.exports = function(app, passport) {
     User.findById( req.session.passport.user, function(err, user) {
       if( err ) {  return sendError(req, res, err); }
       user.rssFeeds.pull(req.body.url)
-
-      eval(require('locus'))
-
       user.save(function(err) {
         if( err ) { return sendError(req, res, err); }
         res.sendStatus(200);

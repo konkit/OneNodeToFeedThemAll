@@ -11,7 +11,7 @@
 	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="bower_components/spin.js/spin.js"></script>
   <script src="bower_components/angular-spinner/angular-spinner.min.js"></script>
-	
+
   <script src="core.js"></script>
 </head>
 
@@ -29,6 +29,8 @@
       </div>
 		</div>
   </nav>
+
+	<span us-spinner spinner-key="spinner-1" spinner-start-active="false"></span>
 
 	<div class="container">
 		<div class="row">
@@ -52,8 +54,8 @@
 					<% } else { %>
 						<a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
 					<% } %>
-				</div>
 
+				</div>
 				<div class="well">
 
 					<div class="checkbox">

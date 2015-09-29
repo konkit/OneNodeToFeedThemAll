@@ -12,6 +12,7 @@ oneNodeToFeedThemAll.controller('mainController',
   function($scope, $http, usSpinnerService) {
     $scope.toggleFacebook = true;
     $scope.toggleTwitter  = true;
+    $scope.currentLimit = 50;
 
     $scope.updateFeeds = function() {
       usSpinnerService.spin('spinner-1');
@@ -21,7 +22,8 @@ oneNodeToFeedThemAll.controller('mainController',
         method: 'GET',
         params: {
           fb: $scope.toggleFacebook,
-          tw: $scope.toggleTwitter
+          tw: $scope.toggleTwitter,
+          limit: $scope.currentLimit
         }
       }).success(function(data) {
         usSpinnerService.stop('spinner-1');
@@ -33,6 +35,11 @@ oneNodeToFeedThemAll.controller('mainController',
         usSpinnerService.stop('spinner-1');
         console.log('Error: ' + data);
       });
+    }
+
+    $scope.morePosts = function() {
+      $scope.currentLimit += 50;
+      $scope.updateFeeds();
     }
 
     $scope.updateFeeds($scope, $http);

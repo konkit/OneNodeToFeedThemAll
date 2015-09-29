@@ -23,6 +23,7 @@ module.exports = function(app, passport) {
 
       var query = Post.find({user: user._id, type: { $in: possibleTypes } });
       query.sort('-date');
+      query.limit(req.query.limit || 100)
       query.exec(function(err, posts) {
         res.send(posts)
       });

@@ -28,11 +28,12 @@ oneNodeToFeedThemAll.controller('mainController',
         }
       }).success(function(data) {
         usSpinnerService.stop('spinner-1');
-        console.log(data);
         $scope.feedData = data;
-        console.log(data);
       })
-      .error(function(data) {
+      .error(function(data, status) {
+        if( status == 401) {
+          return window.location.reload();
+        } 
         usSpinnerService.stop('spinner-1');
         console.log('Error: ' + data);
       });

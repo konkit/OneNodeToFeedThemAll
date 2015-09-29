@@ -7,7 +7,7 @@ module.exports = function(app, passport) {
 
   app.get('/api/feeds/', function(req, res) {
     if( typeof req.session.passport == 'undefined' ) {
-      return res.send('Please log in first');
+      return res.status(401).send('Please log in first');
     }
 
     User.findById(req.session.passport.user, function(err, user) {

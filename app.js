@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 require('./workers/facebookFeedWorker.js')(10000);
+require('./workers/rssFeedWorker.js')(10000);
 require('./workers/twitterFeedWorker.js')(100000);
 
 // launch

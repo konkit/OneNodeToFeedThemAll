@@ -63,14 +63,14 @@
 						{{rssAlert}}
 					</div>
 
-					<p>
-						<ul>
-							<li ng-repeat="rssFeed in userRssFeeds">
+					<table class="table">
+						<tr ng-repeat="rssFeed in userRssFeeds">
+							<td>
 								{{rssFeed}}
 								<a href="" class="glyphicon glyphicon-remove" ng-click="removeNewRssFeed(rssFeed)"></a>
-							</li>
-						</ul>
-					</p>
+							</td>
+						</tr>
+					</table>
 					<div class="input-group">
 						<input class="form-control" type="text" ng-model="newRssFeedUrl" />
 						<span class="input-group-btn">
@@ -86,7 +86,7 @@
 			<div class="col-sm-9">
 				<div ng-repeat="feed in feedData">
 
-					<div ng-show="feed.type == 'facebook'">
+					<!-- <div ng-show="feed.type == 'facebook'">
 						<p><i class="fa fa-facebook"></i>  <b>{{feed.feedData.from.name}}</b> {{feed.date | date : 'medium' }}</p>
 						<p><i ng-show="feed.feedData.story">{{feed.feedData.story}}</i></p>
 						<p>{{feed.feedData.description}}</p>
@@ -99,6 +99,16 @@
 						<p><i class="fa fa-twitter"></i>  <b ng-bind-html='feed.feedData.source'></b> {{feed.date | date : 'medium' }}</p>
 						<p ng-bind-html='feed.feedData.text | linky'></p>
 						<p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p>
+						<hr />
+					</div> -->
+
+					<div ng-show="feed.type == 'rss'">
+						<p><i class="fa fa-rss"></i>  <b ng-bind-html='feed.feedData.channel.title'></b> {{feed.date | date : 'medium' }}</p>
+						<p>
+							<a href="{{feed.feedData.link[0]}}"><b ng-bind-html='feed.feedData.title'></b></a>
+						</p>
+						<p ng-bind-html='feed.feedData.description[0] | linky'></p>
+						<!-- <p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p> -->
 						<hr />
 					</div>
 

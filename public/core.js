@@ -33,6 +33,7 @@ oneNodeToFeedThemAll.controller('mainController', ['$scope', '$http', function($
     $scope.rssAlert = null;
     $http.post('/api/rssFeeds', {url: $scope.newRssFeedUrl}, {dataType: "json"} )
       .success(function(data) {
+        $scope.newRssFeedUrl = "";
         fetchRssFeeds($scope, $http);
       })
       .error(function(data) {

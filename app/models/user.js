@@ -15,7 +15,7 @@ var userSchema = mongoose.Schema({
         displayName : String,
         username    : String
     },
-    rssFeeds: [ { type: String, match: /^http(s)?\:\/\/([\w-\.]+([\w-]+\.)+[\w-]{2,4})?$/ } ]
+    rssFeeds: [ { type: String, match: /^http(s)?\:\/\/([\w-\.]+([\w-]+\.)+[\w\.\/-]+)?$/ } ]
 });
 
 userSchema.methods.generateHash = function(password) {

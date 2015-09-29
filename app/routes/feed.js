@@ -6,8 +6,6 @@ module.exports = function(app, passport) {
   Post = mongoose.model('Post')
 
   app.get('/api/feeds/', function(req, res) {
-    // eval(require('locus'))
-
     if( typeof req.session.passport == 'undefined' ) {
       return res.send('Please log in first');
     }
@@ -15,7 +13,15 @@ module.exports = function(app, passport) {
     User.findById(req.session.passport.user, function(err, user) {
       if( err ) console.log(err);
 
-      var query = Post.find({user: user._id});
+      var possibleTypes = [];
+      if( req.query.fb == 'true' ) {
+        possibleTypes.push('facebook');
+      }
+      if( req.query.tw == 'true' ) {
+        possibleTypes.push('twitter');
+      }
+
+      var query = Post.find({user: user._id, type: { $in: possibleTypes } });
       query.sort('-date');
       query.exec(function(err, posts) {
         res.send(posts)

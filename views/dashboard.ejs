@@ -2,13 +2,17 @@
 <html ng-app="oneNodeToFeedThemAll">
 <head>
 	<title>One node to feed them all - your all feeds in one place!</title>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-sanitize.js"></script>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+	<script src="bower_components/spin.js/spin.js"></script>
+  <script src="bower_components/angular-spinner/angular-spinner.min.js"></script>
+	<script src="lib/ng-text-truncate.js"></script>
+
   <script src="core.js"></script>
 </head>
 
@@ -27,10 +31,20 @@
 		</div>
   </nav>
 
+	<span us-spinner spinner-key="spinner-1" spinner-start-active="false" ></span>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="well">
+
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="toggleFacebook" ng-change="updateFeeds()"> Visible
+				  	</label>
+						{{toggleFacebook}}
+				 	</div>
+
 					<h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
 					<% if (user.facebook.token) { %>
 						<p>
@@ -41,9 +55,17 @@
 					<% } else { %>
 						<a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
 					<% } %>
-				</div>
 
+				</div>
 				<div class="well">
+
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="toggleTwitter" ng-change="updateFeeds()"> Visible
+				  	</label>
+						{{toggleTwitter}}
+				 	</div>
+
 					<h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
 					<% if (user.twitter.token) { %>
 						<p>
@@ -86,10 +108,10 @@
 			<div class="col-sm-9">
 				<div ng-repeat="feed in feedData">
 
-					<!-- <div ng-show="feed.type == 'facebook'">
+					<div ng-show="feed.type == 'facebook'">
 						<p><i class="fa fa-facebook"></i>  <b>{{feed.feedData.from.name}}</b> {{feed.date | date : 'medium' }}</p>
 						<p><i ng-show="feed.feedData.story">{{feed.feedData.story}}</i></p>
-						<p>{{feed.feedData.description}}</p>
+						<p ng-text-truncate="feed.feedData.description" ng-tt-chars-threshold="300"></p>
 						<p>{{feed.feedData.message}}</p>
 						<p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p>
 						<hr />
@@ -100,7 +122,7 @@
 						<p ng-bind-html='feed.feedData.text | linky'></p>
 						<p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p>
 						<hr />
-					</div> -->
+					</div>
 
 					<div ng-show="feed.type == 'rss'">
 						<p><i class="fa fa-rss"></i>  <b ng-bind-html='feed.feedData.channel.title'></b> {{feed.date | date : 'medium' }}</p>
@@ -113,6 +135,8 @@
 					</div>
 
 				</div>
+
+				<button class="btn btn-default btn-block" ng-click="morePosts()">More posts</button>
 			</div>
 
 		</div>

@@ -1,0 +1,25 @@
+{
+  "name": "OneNodeToFeedThemAll",
+  "version": "0.0.0",
+  "authors": [
+    "Lukasz Tenerowicz <lukasz.tenerowicz@polcode.net>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.6",
+    "angular-sanitize": "~1.4.6",
+    "angular-spinner": "~0.7.0",
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.4.0"
+  }
+}

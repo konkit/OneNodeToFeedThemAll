@@ -21,7 +21,7 @@ Post = mongoose.model('Post')
       , access_token_secret:  user.twitter.tokenSecret
     })
 
-    T.get('statuses/home_timeline/' + user.twitter.username, { count: 100 }, function(err, data, response) {
+    T.get('statuses/home_timeline/' + user.twitter.username, { count: 500 }, function(err, data, response) {
       if(err) { console.log('Err: ' + err); }
       resultCallback(data);
     })

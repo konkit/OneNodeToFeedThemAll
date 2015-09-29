@@ -29,6 +29,7 @@ app.set('view engine', 'ejs');
 
 // static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
 
 // routes
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport

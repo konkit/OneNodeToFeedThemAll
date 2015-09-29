@@ -2,7 +2,8 @@
 var oneNodeToFeedThemAll = angular.module('oneNodeToFeedThemAll',
   [
     'ngSanitize',
-    'angularSpinner'
+    'angularSpinner',
+    'ngTextTruncate'
   ]
 );
 
@@ -46,6 +47,6 @@ oneNodeToFeedThemAll.controller('mainController',
 
     setInterval(function() {
       $scope.updateFeeds($scope, $http);
-    }, 10000);
+    }, 30000);
   }
 ]);

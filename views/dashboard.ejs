@@ -11,6 +11,7 @@
 	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="bower_components/spin.js/spin.js"></script>
   <script src="bower_components/angular-spinner/angular-spinner.min.js"></script>
+	<script src="lib/ng-text-truncate.js"></script>
 
   <script src="core.js"></script>
 </head>
@@ -85,7 +86,7 @@
 					<div ng-show="feed.type == 'facebook'">
 						<p><i class="fa fa-facebook"></i>  <b>{{feed.feedData.from.name}}</b> {{feed.date | date : 'medium' }}</p>
 						<p><i ng-show="feed.feedData.story">{{feed.feedData.story}}</i></p>
-						<p>{{feed.feedData.description}}</p>
+						<p ng-text-truncate="feed.feedData.description" ng-tt-chars-threshold="300"></p>
 						<p>{{feed.feedData.message}}</p>
 						<p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p>
 						<hr />

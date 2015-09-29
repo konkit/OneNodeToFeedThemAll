@@ -82,17 +82,17 @@
                     var el = angular.element(    "<span>" +
                                                     $scope.text.substr( 0, threshould ) +
                                                     "<span ng-show='!open'>...</span>" +
-                                                    "<span class='btn-link ngTruncateToggleText' " +
+                                                    "<a href='' class='btn-link ngTruncateToggleText' " +
                                                         "ng-click='toggleShow()'" +
                                                         "ng-show='!open'>" +
                                                         " " + ($scope.customMoreLabel ? $scope.customMoreLabel : "More") +
-                                                    "</span>" +
+                                                    "</a>" +
                                                     "<span ng-show='open'>" +
                                                         $scope.text.substring( threshould ) +
-                                                        "<span class='btn-link ngTruncateToggleText'" +
+                                                        "<a href='' class='btn-link ngTruncateToggleText'" +
                                                               "ng-click='toggleShow()'>" +
                                                             " " + ($scope.customLessLabel ? $scope.customLessLabel : "Less") +
-                                                        "</span>" +
+                                                        "</a>" +
                                                     "</span>" +
                                                 "</span>" );
                     $compile( el )( $scope );

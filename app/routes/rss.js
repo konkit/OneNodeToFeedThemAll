@@ -1,6 +1,7 @@
 module.exports = function(app, passport) {
   mongoose = require('mongoose');
   restler = require('restler');
+  feed = require("feed-read");
 
   User = mongoose.model('User')
   Post = mongoose.model('Post')
@@ -14,7 +15,9 @@ module.exports = function(app, passport) {
 
   function checkIfRss(newRssUrl, success, error) {
     restler.get(newRssUrl).on('complete', function(rss) {
-      if( typeof rss.rss !== 'undefined' && typeof rss.rss.$.version !== 'undefined' ) {
+      if( typeof rss.rss === 'object' && typeof rss.rss.$.version !== 'undefined' ) {
+        success();
+      } else if( typeof rss === 'string' && feed.identify(rss) != false ) {
         success();
       } else {
         error();

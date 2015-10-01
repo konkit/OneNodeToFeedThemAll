@@ -1,0 +1,15 @@
+.feedDescription > img {
+  max-width: 100px;
+  max-height: 100px;
+  float: left;
+  margin-right: 15px;
+}
+
+.feed {
+  display: inline-block;
+  width: 96%;
+}
+
+.clearfix {
+  clear: both;
+}

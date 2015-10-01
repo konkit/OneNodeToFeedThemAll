@@ -14,6 +14,7 @@
 	<script src="lib/ng-text-truncate.js"></script>
 
   <script src="core.js"></script>
+	<link rel="stylesheet" href="styles.css">
 </head>
 
 <body ng-controller="mainController">
@@ -44,6 +45,8 @@
 				  	</label>
 						{{toggleFacebook}}
 				 	</div> -->
+
+					<p class="text-muted">Fetching FB posts is unfortunately not available anymore because of API changes</p>
 
 					<h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
 					<% if (user.facebook.token) { %>
@@ -115,29 +118,32 @@
 			<div class="col-sm-9">
 				<div ng-repeat="feed in feedData">
 
-					<div ng-show="feed.type == 'facebook'">
+					<div ng-show="feed.type == 'facebook'" class="feed">
 						<p><i class="fa fa-facebook"></i>  <b>{{feed.feedData.from.name}}</b> {{feed.date | date : 'medium' }}</p>
 						<p><i ng-show="feed.feedData.story">{{feed.feedData.story}}</i></p>
 						<p ng-text-truncate="feed.feedData.description" ng-tt-chars-threshold="300"></p>
 						<p>{{feed.feedData.message}}</p>
 						<p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p>
+						<p class="clearfix"></p>
 						<hr />
 					</div>
 
-					<div ng-show="feed.type == 'twitter'">
+					<div ng-show="feed.type == 'twitter'" class="feed">
 						<p><i class="fa fa-twitter"></i>  <b ng-bind-html='feed.feedData.source'></b> {{feed.date | date : 'medium' }}</p>
 						<p ng-bind-html='feed.feedData.text | linky'></p>
 						<p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p>
+						<p class="clearfix"></p>
 						<hr />
 					</div>
 
-					<div ng-show="feed.type == 'rss'">
+					<div ng-show="feed.type == 'rss'" class="feed">
 						<p><i class="fa fa-rss"></i>  <b ng-bind-html='feed.feedData.channelName'></b> {{feed.date | date : 'medium' }}</p>
 						<p>
-							<a href="{{feed.feedData.link[0]}}"><b ng-bind-html='feed.feedData.title'></b></a>
+							<a href="{{feed.feedData.link}}"><b ng-bind-html='feed.feedData.title'></b></a>
 						</p>
-						<p ng-bind-html='feed.feedData.description[0] | linky'></p>
+						<p class="feedDescription" ng-bind-html='feed.feedData.description'></p>
 						<!-- <p><img ng-show="feed.feedData.picture" ng-src="{{feed.feedData.picture}}" alt="img" /></p> -->
+						<p class="clearfix"></p>
 						<hr />
 					</div>
 

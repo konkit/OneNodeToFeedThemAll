@@ -7,23 +7,14 @@ var oneNodeToFeedThemAll = angular.module('oneNodeToFeedThemAll',
   ]
 );
 
-function fetchRssFeeds($scope, $http) {
-  $http.get('/api/rssFeeds')
-    .success(function(data) {
-      $scope.userRssFeeds = data;
-    })
-    .error(function(data) {
-      console.log('Error: ' + data);
-    });
-}
-
 oneNodeToFeedThemAll.controller('mainController',
 [
   '$scope', '$http', 'usSpinnerService',
   function($scope, $http, usSpinnerService) {
     $scope.toggleFacebook = true;
     $scope.toggleTwitter  = true;
-    $scope.currentLimit = 50;
+    $scope.toggleRss      = true;
+    $scope.currentLimit   = 50;
 
     $scope.updateFeeds = function() {
       usSpinnerService.spin('spinner-1');
@@ -34,7 +25,7 @@ oneNodeToFeedThemAll.controller('mainController',
         params: {
           fb: $scope.toggleFacebook,
           tw: $scope.toggleTwitter,
-          rss: true,
+          rss: $scope.toggleRss,
           limit: $scope.currentLimit
         }
       }).success(function(data) {
@@ -55,12 +46,22 @@ oneNodeToFeedThemAll.controller('mainController',
       $scope.updateFeeds();
     }
 
+    $scope.fetchRssFeeds = function() {
+      $http.get('/api/rssFeeds')
+        .success(function(data) {
+          $scope.userRssFeeds = data;
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
+    }
+
     $scope.addNewRssFeed = function() {
       $scope.rssAlert = null;
       $http.post('/api/rssFeeds', {url: $scope.newRssFeedUrl}, {dataType: "json"} )
         .success(function(data) {
           $scope.newRssFeedUrl = "";
-          fetchRssFeeds($scope, $http);
+          $scope.fetchRssFeeds();
         })
         .error(function(data) {
           $scope.rssAlert = data.error.message;
@@ -71,7 +72,7 @@ oneNodeToFeedThemAll.controller('mainController',
       $scope.rssAlert = null;
       $http.post('/api/rssFeeds/remove', {url: valueToRemove}, {dataType: "json"} )
         .success(function(data) {
-          fetchRssFeeds($scope, $http);
+          $scope.fetchRssFeeds();
         })
         .error(function(data) {
           console.log('error: '); console.log(data);
@@ -79,6 +80,7 @@ oneNodeToFeedThemAll.controller('mainController',
     }
 
     $scope.updateFeeds($scope, $http);
+    $scope.fetchRssFeeds();
 
     setInterval(function() {
       $scope.updateFeeds($scope, $http);

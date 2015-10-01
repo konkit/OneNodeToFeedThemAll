@@ -14,9 +14,6 @@ module.exports = function(app, passport) {
       if( err ) console.log(err);
 
       var possibleTypes = [];
-      if( req.query.fb == 'true' ) {
-        possibleTypes.push('facebook');
-      }
       if( req.query.tw == 'true' ) {
         possibleTypes.push('twitter');
       }

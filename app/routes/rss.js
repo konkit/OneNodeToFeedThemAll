@@ -25,7 +25,7 @@ module.exports = function(app, passport) {
   function addRssChannels(req, res, newRssUrl) {
     User.findById( req.session.passport.user, function(err, user) {
       if( err ) {  return sendError(req, res, err); }
-      user.rssFeeds.addToSet(newRssUrl)
+      user.rssFeeds.addToSet({url: newRssUrl})
       user.save(function(err) {
         if( err ) { return sendError(req, res, err); }
         res.sendStatus(200);
@@ -64,6 +64,7 @@ module.exports = function(app, passport) {
     User.findById( req.session.passport.user, function(err, user) {
       if( err ) {  return sendError(req, res, err); }
       user.rssFeeds.pull(req.body.url)
+      Post.find({rssUrl: req.body.url.url, user: user}).remove().exec();
       user.save(function(err) {
         if( err ) { return sendError(req, res, err); }
         res.sendStatus(200);

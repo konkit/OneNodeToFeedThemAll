@@ -8,12 +8,11 @@ Post = mongoose.model('Post')
 
   function getRssFeed(user, resultCallback, errorCallback) {
     user.rssFeeds.forEach(function(feedUrl) {
-      restler.get(feedUrl).on('complete', function(result) {
-        //eval(require('locus'))
+      restler.get(feedUrl.url).on('complete', function(result) {
 
         if( typeof result.rss !== 'undefined' && typeof result.rss.$.version !== 'undefined' ) {
           result.rss.channel.forEach(function(channel) {
-            resultCallback(channel);
+            resultCallback(channel, feedUrl);
           });
         } else {
           errorCallback('RSS error - not in proper RSS format!');
@@ -23,7 +22,7 @@ Post = mongoose.model('Post')
   }
 
   function saveUserFeed(user) {
-    getRssFeed(user, function(channel) {
+    getRssFeed(user, function(channel, rssUrl) {
       channel.item.forEach(function(post) {
         console.log(JSON.stringify(post));
 
@@ -31,6 +30,7 @@ Post = mongoose.model('Post')
           id: post.title,
           date: (new Date(post.pubDate)).toISOString(),
           type: 'rss',
+          rssUrl: rssUrl.url,
           feedData: {
             channelName: channel.title,
             pubDate: post.pubDate,

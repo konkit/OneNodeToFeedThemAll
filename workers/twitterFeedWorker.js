@@ -33,8 +33,9 @@ Post = mongoose.model('Post')
         return console.log('!!! ERRORS : ' + JSON.stringify(result.errors));
       }
 
+
       result.forEach(function(post) {
-        Post.findOneOrCreate({id: post.id, type: 'twitter'}, {
+        Post.findOneOrCreate({id: post.id, type: 'twitter', user: user}, {
           id: post.id,
           date: (new Date(post.created_at)).toISOString(),
           type: 'twitter',

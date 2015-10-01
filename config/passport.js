@@ -118,7 +118,7 @@ module.exports = function(passport) {
 
                 newUser.twitter.id          = profile.id;
                 newUser.twitter.token       = token;
-                user.twitter.tokenSecret    = tokenSecret;
+                newUser.twitter.tokenSecret = tokenSecret;
                 newUser.twitter.username    = profile.username;
                 newUser.twitter.displayName = profile.displayName;
 

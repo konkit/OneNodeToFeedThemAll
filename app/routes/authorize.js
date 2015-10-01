@@ -1,6 +1,6 @@
 module.exports = function(app, passport) {
 
-	app.get('/connect/facebook', passport.authorize('facebook', { scope : ['email', 'read_stream'] }));
+	app.get('/connect/facebook', passport.authorize('facebook', { scope : 'email' }));
 	app.get('/connect/facebook/callback',
 		passport.authorize('facebook', {
 			successRedirect : '/profile',

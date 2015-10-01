@@ -20,6 +20,9 @@ module.exports = function(app, passport) {
       if( req.query.tw == 'true' ) {
         possibleTypes.push('twitter');
       }
+      if( req.query.rss == 'true' ) {
+        possibleTypes.push('rss');
+      }
 
       var query = Post.find({user: user._id, type: { $in: possibleTypes } });
       query.sort('-date');

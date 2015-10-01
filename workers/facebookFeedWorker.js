@@ -46,8 +46,8 @@ Post = mongoose.model('Post')
   }
 
 module.exports = function(timeout) {
-  intervalFunction();
-  setInterval(function() {
-    intervalFunction();
-  }, timeout);
+  // intervalFunction();
+  // setInterval(function() {
+  //   intervalFunction();
+  // }, timeout);
 }

@@ -34,6 +34,7 @@ oneNodeToFeedThemAll.controller('mainController',
         params: {
           fb: $scope.toggleFacebook,
           tw: $scope.toggleTwitter,
+          rss: true,
           limit: $scope.currentLimit
         }
       }).success(function(data) {

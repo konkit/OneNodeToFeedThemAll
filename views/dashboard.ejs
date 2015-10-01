@@ -38,12 +38,12 @@
 			<div class="col-sm-3">
 				<div class="well">
 
-					<div class="checkbox">
+					<!-- <div class="checkbox">
 						<label>
 							<input type="checkbox" ng-model="toggleFacebook" ng-change="updateFeeds()"> Visible
 				  	</label>
 						{{toggleFacebook}}
-				 	</div>
+				 	</div> -->
 
 					<h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
 					<% if (user.facebook.token) { %>
@@ -125,7 +125,7 @@
 					</div>
 
 					<div ng-show="feed.type == 'rss'">
-						<p><i class="fa fa-rss"></i>  <b ng-bind-html='feed.feedData.channel.title'></b> {{feed.date | date : 'medium' }}</p>
+						<p><i class="fa fa-rss"></i>  <b ng-bind-html='feed.feedData.channelName'></b> {{feed.date | date : 'medium' }}</p>
 						<p>
 							<a href="{{feed.feedData.link[0]}}"><b ng-bind-html='feed.feedData.title'></b></a>
 						</p>

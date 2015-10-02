@@ -30,7 +30,7 @@ Post = mongoose.model('Post')
         var stream = this, meta = this.meta, item;
 
         while (item = stream.read()) {
-          console.log(item);
+          //console.log(item);
           resultCallback(item, feedUrl);
         }
       });

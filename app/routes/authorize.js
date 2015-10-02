@@ -14,4 +14,14 @@ module.exports = function(app, passport) {
 			failureRedirect : '/'
 		})
 	);
+
+	app.get('/connect/local', function(req, res) {
+		res.render('connect-local.ejs', { message: req.flash('loginMessage') });
+	});
+	
+	app.post('/connect/local', passport.authenticate('local-signup', {
+		successRedirect : '/profile',
+		failureRedirect : '/connect/local',
+		failureFlash : true
+	}));
 }

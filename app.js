@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var path     = require('path');
+var bodyParser = require('body-parser');
 
 // Mongo setup
 var configDB = require('./config/database.js');
@@ -18,7 +19,8 @@ sessionStore = new session.MemoryStore;
 // set up express
 app.use(require('morgan')('combined')); // logging
 app.use(require('cookie-parser')());
-app.use(require('body-parser').json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(session({ store: sessionStore, secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());

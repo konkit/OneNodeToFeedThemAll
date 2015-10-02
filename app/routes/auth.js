@@ -13,4 +13,20 @@ module.exports = function(app, passport) {
       successRedirect : '/profile',
       failureRedirect : '/'
     }));
+
+	app.get('/auth/local', function(req, res) {
+		res.render('localauth.ejs', { message: req.flash('localAuthMessage') });
+	});
+
+	app.post('/login', passport.authenticate('local-login', {
+		successRedirect : '/profile',
+		failureRedirect : '/auth/local',
+		failureFlash : true
+	}));
+
+	app.post('/signup', passport.authenticate('local-signup', {
+		successRedirect : '/profile',
+		failureRedirect : '/auth/local',
+		failureFlash : true
+	}));
 }

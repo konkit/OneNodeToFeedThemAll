@@ -22,6 +22,11 @@ module.exports = function(app, passport) {
 		res.redirect('/');
 	});
 
+	app.get('/asdf', function(req, res) {
+		req.flash('localAuthMessage', 'It works!');
+		res.redirect('/auth/local')
+	})
+
 	require('./routes/auth.js')(app, passport);
 	require('./routes/authorize.js')(app, passport);
 	require('./routes/unlink.js')(app, passport);

@@ -15,10 +15,10 @@ Post = mongoose.model('Post')
     }
 
     var T = new Twit({
-        consumer_key:         configAuth.twitterAuth.consumerKey
-      , consumer_secret:      configAuth.twitterAuth.consumerSecret
-      , access_token:         user.twitter.token
-      , access_token_secret:  user.twitter.tokenSecret
+      consumer_key:         configAuth.twitterAuth.consumerKey,
+      consumer_secret:      configAuth.twitterAuth.consumerSecret,
+      access_token:         user.twitter.token,
+      access_token_secret:  user.twitter.tokenSecret
     })
 
     T.get('statuses/home_timeline/' + user.twitter.username, { count: 500 }, function(err, data, response) {
@@ -32,7 +32,6 @@ Post = mongoose.model('Post')
       if(typeof result.errors !== 'undefined') {
         return console.log('!!! ERRORS : ' + JSON.stringify(result.errors));
       }
-
 
       result.forEach(function(post) {
         Post.findOneOrCreate({id: post.id, type: 'twitter', user: user}, {

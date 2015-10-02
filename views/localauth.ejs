@@ -10,9 +10,15 @@
 <body>
 	<div class="container paddingTop">
 
+		<% if (message.length > 0) { %>
+			<div class="alert alert-danger alert-dismissable"><%= message %></div>
+		<% } %>
+
 		<div class="row">
 			<a class="pull-right" href="/"><button class="btn btn-default">Back to main page</button></a>
 		</div>
+
+
 
 		<div class="row">
 			<div class="col-sm-5">
@@ -60,11 +66,6 @@
 
 			</div>
 		</div>
-
-		<% if (message.length > 0) { %>
-			<div class="alert alert-danger alert-dismissable"><%= message %></div>
-		<% } %>
-
 
 	</div>
 </body>

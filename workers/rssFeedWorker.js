@@ -30,21 +30,9 @@ Post = mongoose.model('Post')
         var stream = this, meta = this.meta, item;
 
         while (item = stream.read()) {
-          //console.log(item);
           resultCallback(item, feedUrl);
         }
       });
-
-      // restler.get(feedUrl.url).on('complete', function(result) {
-      //
-      //   if( typeof result.rss !== 'undefined' && typeof result.rss.$.version !== 'undefined' ) {
-      //     result.rss.channel.forEach(function(channel) {
-      //       resultCallback(channel, feedUrl);
-      //     });
-      //   } else {
-      //     errorCallback('RSS error - not in proper RSS format!');
-      //   }
-      // });
     });
   }
 

@@ -17,3 +17,11 @@
 .paddingTop {
   padding-top:80px;
 }
+
+.rssWell {
+  overflow: hidden;
+}
+
+.rssEntry {
+  white-space: nowrap;
+}

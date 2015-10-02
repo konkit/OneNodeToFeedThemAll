@@ -21,9 +21,7 @@ var userSchema = mongoose.Schema({
     },
     rssFeeds: [
       {
-        url: {
-          type: String, match: /^http(s)?\:\/\/([\w-\.]+([\w-]+\.)+[\w\.\/-]+)?$/
-        }
+        url: String
       }
     ]
 });

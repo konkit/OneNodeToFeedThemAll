@@ -43,7 +43,7 @@
 					<p class="text-muted">Facebook authentication is work properly.</p>
 
 					<h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
-					<% if ( user.facebook && user.facebook.token ) { %>
+					<% if ( user && user.facebook && user.facebook.token ) { %>
 						<p>
 							<%= user.facebook.email %><br>
 							<%= user.facebook.name %><br>
@@ -64,7 +64,7 @@
 				 	</div>
 
 					<h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
-					<% if (user.twitter && user.twitter.token) { %>
+					<% if ( user && user.twitter && user.twitter.token) { %>
 						<p>
 							<%= user.twitter.displayName %><br>
 							<%= user.twitter.username %>

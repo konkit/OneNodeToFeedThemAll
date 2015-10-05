@@ -1,10 +1,11 @@
-restler = require('restler');
-mongoose = require('mongoose');
+var restler = require('restler');
+var mongoose = require('mongoose');
 var Twit = require('twit')
+var async = require('async');
+var configAuth = require('../config/auth');
 
 require('../app/models/post');
 
-var configAuth = require('../config/auth');
 
 User = mongoose.model('User')
 Post = mongoose.model('Post')
@@ -34,7 +35,7 @@ Post = mongoose.model('Post')
         return console.log('!!! ERRORS : ' + JSON.stringify(result.errors));
       }
 
-      result.forEach(function(post) {
+      async.forEach(result, function(post) {
         Post.findOneOrCreate({id: post.id, type: 'twitter', user: user}, {
           id: post.id,
           date: (new Date(post.created_at)).toISOString(),
@@ -49,8 +50,10 @@ Post = mongoose.model('Post')
   }
 
   function intervalFunction() {
+    console.log('Fetching from Twitter');
+
     User.find({}, function(err, users) {
-      users.forEach(function(user, index) {
+      async.forEach(users, function(user, index) {
         saveUserFeed(user);
       });
     });

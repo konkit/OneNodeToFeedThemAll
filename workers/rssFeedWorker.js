@@ -1,10 +1,9 @@
-restler = require('restler');
-mongoose = require('mongoose');
-
+var restler = require('restler');
+var mongoose = require('mongoose');
 var FeedParser = require('feedparser'), request = require('request');
+var async = require('async');
 
 require('../app/models/post');
-var async = require('async');
 
 User = mongoose.model('User')
 Post = mongoose.model('Post')
@@ -62,7 +61,7 @@ Post = mongoose.model('Post')
   }
 
   function intervalFunction() {
-    console.log('RSS feed worker');
+    console.log('Fetching from RSS');
 
     User.find({}, function(err, users) {
       async.forEach(users, function(user, index) {

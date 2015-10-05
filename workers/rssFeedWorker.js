@@ -4,12 +4,13 @@ mongoose = require('mongoose');
 var FeedParser = require('feedparser'), request = require('request');
 
 require('../app/models/post');
+var async = require('async');
 
 User = mongoose.model('User')
 Post = mongoose.model('Post')
 
   function getRssFeed(user, resultCallback, errorCallback) {
-    user.rssFeeds.forEach(function(feedUrl) {
+    async.forEach(user.rssFeeds, function(feedUrl) {
       var req = request(feedUrl.url), feedparser = new FeedParser();
 
       req.on('error', function (errorMsg) {
@@ -64,7 +65,7 @@ Post = mongoose.model('Post')
     console.log('RSS feed worker');
 
     User.find({}, function(err, users) {
-      users.forEach(function(user, index) {
+      async.forEach(users, function(user, index) {
         saveUserFeed(user);
       });
     });

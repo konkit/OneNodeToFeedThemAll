@@ -36,8 +36,10 @@ app.use('/bower_components', express.static(path.join(__dirname, '/bower_compone
 // routes
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-require('./workers/rssFeedWorker.js')(10000);
-require('./workers/twitterFeedWorker.js')(100000);
+require('./workers/rssFeedWorker.js')(1000 * 10);
+require('./workers/twitterFeedWorker.js')(1000 * 120);
+require('./workers/postCacheCleaner.js')(1000 * 3600 * 6 );
+
 
 // launch
 app.listen(port);

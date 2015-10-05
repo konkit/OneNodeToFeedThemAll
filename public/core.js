@@ -70,7 +70,8 @@ oneNodeToFeedThemAll.controller('mainController',
 
     $scope.removeNewRssFeed = function(valueToRemove) {
       $scope.rssAlert = null;
-      $http.post('/api/rssFeeds/remove', {url: valueToRemove}, {dataType: "json"} )
+
+      $http.delete('/api/rssFeeds/' + valueToRemove._id, {dataType: "json"} )
         .success(function(data) {
           $scope.fetchRssFeeds();
         })

@@ -6,6 +6,52 @@ module.exports = function(app, passport) {
   User = mongoose.model('User')
   Post = mongoose.model('Post')
 
+  app.get('/api/rssFeeds', function(req, res) {
+    if( typeof req.session.passport == 'undefined' ) {
+      return res.send('Please log in first');
+    }
+    User.findById( req.session.passport.user, function(err, user) {
+      if( err ) { return sendError(req, res, err); }
+      res.send(user.rssFeeds)
+    });
+  });
+
+  app.post('/api/rssFeeds', function(req, res) {
+    newRssUrl = req.body.url
+
+    if( !newRssUrl.match('^http(s)?://') ) {
+      newRssUrl = 'http://' + newRssUrl;
+    }
+
+    if( typeof req.session.passport == 'undefined' ) {
+      return res.send('Please log in first');
+    }
+
+    checkIfRss(newRssUrl, function() {
+      addRssChannels(req, res, newRssUrl);
+    }, function() {
+      sendError(req, res, {message: 'Not a RSS channel'})
+    });
+  });
+
+  app.delete('/api/rssFeeds/:rssUrlId', function(req, res) {
+    if( typeof req.session.passport == 'undefined' ) {
+      return res.send('Please log in first');
+    }
+
+    User.findById( req.session.passport.user, function(err, user) {
+      if( err ) {  return sendError(req, res, err); }
+
+      var rssEntry = user.rssFeeds.id(req.params.rssUrlId);
+      Post.find({rssUrl: rssEntry.url, user: user}).remove().exec();
+      rssEntry.remove();
+      user.save(function(err) {
+        if( err ) { return sendError(req, res, err); }
+        res.sendStatus(200);
+      });
+    });
+  });
+
   function sendError(req, res, err) {
     console.log("!!!");
     console.log("Error: " + err);
@@ -14,6 +60,10 @@ module.exports = function(app, passport) {
   }
 
   function checkIfRss(newRssUrl, success, error) {
+    if( !newRssUrl.match('^http(s)?://') ) {
+      newRssUrl = 'http://' + newRssUrl;
+    }
+
     restler.get(newRssUrl).on('complete', function(rss) {
       if( typeof rss.rss === 'object' && typeof rss.rss.$.version !== 'undefined' ) {
         success();
@@ -36,42 +86,5 @@ module.exports = function(app, passport) {
     });
   }
 
-  app.get('/api/rssFeeds', function(req, res) {
-    if( typeof req.session.passport == 'undefined' ) {
-      return res.send('Please log in first');
-    }
-    User.findById( req.session.passport.user, function(err, user) {
-      if( err ) { return sendError(req, res, err); }
-      res.send(user.rssFeeds)
-    });
-  });
 
-  app.post('/api/rssFeeds', function(req, res) {
-    newRssUrl = req.body.url
-
-    if( typeof req.session.passport == 'undefined' ) {
-      return res.send('Please log in first');
-    }
-
-    checkIfRss(newRssUrl, function() {
-      addRssChannels(req, res, newRssUrl);
-    }, function() {
-      sendError(req, res, {message: 'Not a RSS channel'})
-    });
-  });
-
-  app.post('/api/rssFeeds/remove', function(req, res) {
-    if( typeof req.session.passport == 'undefined' ) {
-      return res.send('Please log in first');
-    }
-    User.findById( req.session.passport.user, function(err, user) {
-      if( err ) {  return sendError(req, res, err); }
-      user.rssFeeds.pull(req.body.url)
-      Post.find({rssUrl: req.body.url.url, user: user}).remove().exec();
-      user.save(function(err) {
-        if( err ) { return sendError(req, res, err); }
-        res.sendStatus(200);
-      });
-    });
-  });
 }

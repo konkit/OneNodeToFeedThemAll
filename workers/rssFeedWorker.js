@@ -1,78 +1,71 @@
-var restler = require('restler');
-var mongoose = require('mongoose');
-var FeedParser = require('feedparser'), request = require('request');
-var async = require('async');
+module.exports = function(timeout) {
+  var restler = require('restler');
+  var mongoose = require('mongoose');
+  var FeedParser = require('feedparser'), request = require('request');
+  var async = require('async');
 
-require('../app/models/post');
+  require('../app/models/post');
 
-User = mongoose.model('User')
-Post = mongoose.model('Post')
+  User = mongoose.model('User')
+  Post = mongoose.model('Post')
 
-  function getRssFeed(user, resultCallback, errorCallback) {
-    async.forEach(user.rssFeeds, function(feedUrl) {
-      var req = request(feedUrl.url), feedparser = new FeedParser();
 
-      req.on('error', function (errorMsg) {
-        errorCallback(errorMsg);
-      });
-
-      req.on('response', function (res) {
-        var stream = this;
-        if (res.statusCode != 200) return this.emit('error', new Error('Bad status code'));
-        stream.pipe(feedparser);
-      });
-
-      feedparser.on('error', function(errorMsg) {
-        errorCallback(errorMsg);
-      });
-
-      feedparser.on('readable', function() {
-        var stream = this, meta = this.meta, item;
-
-        while (item = stream.read()) {
-          resultCallback(item, feedUrl);
-        }
-      });
-    });
-  }
-
-  function saveUserFeed(user) {
-    getRssFeed(user, function(post, rssUrl) {
-      Post.findOneOrCreate({id: post.title, type: 'rss', user: user}, {
-        id: post.title,
-        date: (new Date(post.pubDate)).toISOString(),
-        type: 'rss',
-        rssUrl: rssUrl.url,
-        feedData: {
-          channelName: '',
-          pubDate: post.pubDate,
-          title: post.title,
-          link: post.link,
-          description: post.description
-        },
-        user: user
-      }, function(err, createdPost) {
-        if( err ) console.log('Post saving error: ' + err)
-      })
-
-    }, function(msg) {
-      console.log(msg);
-    })
-  }
+  intervalFunction();
+  setInterval(function() { intervalFunction(); }, timeout);
 
   function intervalFunction() {
     console.log('Fetching from RSS');
 
     User.find({}, function(err, users) {
       async.forEach(users, function(user, index) {
-        saveUserFeed(user);
+        async.forEach(user.rssFeeds, function(feedUrl) {
+          getRssFeed(user, feedUrl);
+        });
       });
     });
   }
 
-module.exports = function(timeout) {
-  intervalFunction();
-  setInterval(function() {
-    intervalFunction();
-  }, timeout);
+  function getRssFeed(user, feedUrl) {
+    var req = request(feedUrl.url), feedparser = new FeedParser();
+
+    req.on('error', function (errorMsg) {
+      console.log('Error: ' + errorMsg);
+    });
+
+    req.on('response', function (res) {
+      var stream = this;
+      if (res.statusCode != 200) return this.emit('error', new Error('Bad status code'));
+      stream.pipe(feedparser);
+    });
+
+    feedparser.on('error', function(errorMsg) {
+      errorCallback(errorMsg);
+    });
+
+    feedparser.on('readable', function() {
+      var stream = this, meta = this.meta, item;
+      while (post = stream.read()) {
+        savePost(post, feedUrl, user);
+      }
+    });
+  }
+
+  function savePost(post, feedUrl, user) {
+    Post.findOneOrCreate({id: post.title, type: 'rss', user: user}, {
+      id: post.title,
+      date: (new Date(post.pubDate)).toISOString(),
+      type: 'rss',
+      rssUrl: feedUrl.url,
+      feedData: {
+        channelName: '',
+        pubDate: post.pubDate,
+        title: post.title,
+        link: post.link,
+        description: post.description
+      },
+      user: user
+    }, function(err, createdPost) {
+      if( err ) console.log('Post saving error: ' + err)
+    })
+  }
 }

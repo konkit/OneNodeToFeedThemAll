@@ -5,8 +5,8 @@ module.exports = {
 		'callbackURL'  : ( process.env.SERVER_URL || 'http://localhost:3000') + '/auth/facebook/callback'
 	},
 	'twitterAuth' : {
-		'consumerKey' 		: '4qf5IouYYD554s5PN02pdMui7',
-		'consumerSecret' 	: 'QEwsLu0IN8QJlWAsT1AfFE5uG5c9ie6AERnMOmSIHTENYhg5bY',
+		'consumerKey' 		: process.env.TWITTER_CONSUMER_KEY || '4qf5IouYYD554s5PN02pdMui7',
+		'consumerSecret' 	: process.env.TWITTER_CONSUMER_SECRET || 'QEwsLu0IN8QJlWAsT1AfFE5uG5c9ie6AERnMOmSIHTENYhg5bY',
 		'callbackURL' 		: ( process.env.SERVER_URL || 'http://localhost:3000') + '/auth/twitter/callback'
 	}
 };

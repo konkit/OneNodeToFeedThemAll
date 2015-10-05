@@ -39,18 +39,11 @@
 			<div class="col-sm-4">
 				<div class="well">
 
-					<!-- <div class="checkbox">
-						<label>
-							<input type="checkbox" ng-model="toggleFacebook" ng-change="updateFeeds()"> Visible
-				  	</label>
-						{{toggleFacebook}}
-				 	</div> -->
-
 					<p class="text-muted">Fetching FB posts is unfortunately not available anymore because of changes in their API</p>
 					<p class="text-muted">Facebook authentication is work properly.</p>
 
 					<h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
-					<% if (user.facebook.token) { %>
+					<% if ( user.facebook && user.facebook.token ) { %>
 						<p>
 							<%= user.facebook.email %><br>
 							<%= user.facebook.name %><br>
@@ -71,7 +64,7 @@
 				 	</div>
 
 					<h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
-					<% if (user.twitter.token) { %>
+					<% if (user.twitter && user.twitter.token) { %>
 						<p>
 							<%= user.twitter.displayName %><br>
 							<%= user.twitter.username %>

@@ -10,6 +10,8 @@ User = mongoose.model('User')
 Post = mongoose.model('Post')
 
   function getTwitterFeed(user, resultCallback) {
+    console.log("Twitter user : ");
+    console.log(JSON.stringify(user.twitter));
     if( typeof user.twitter.tokenSecret === "undefined" ){
       return;
     }

@@ -36,9 +36,25 @@ app.use('/bower_components', express.static(path.join(__dirname, '/bower_compone
 // routes
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-require('./workers/rssFeedWorker.js')(1000 * 10);
-require('./workers/twitterFeedWorker.js')(1000 * 120);
-require('./workers/postCacheCleaner.js')(1000 * 3600 * 6 );
+// Starting workers
+rssFeedWorker = require('./workers/rssFeedWorker.js');
+twitterFeedWorker = require('./workers/rssFeedWorker.js');
+postCacheCleaner = require('./workers/postCacheCleaner.js');
+
+rssFeedWorker.run();
+setInterval(function() {
+  rssFeedWorker.run();
+}, 1000 * 10);
+
+twitterFeedWorker.run();
+setInterval(function() {
+  twitterFeedWorker.run();
+}, 1000 * 120);
+
+postCacheCleaner.run();
+setInterval(function() {
+  postCacheCleaner.run();
+}, 1000 * 3600 * 6);
 
 
 // launch

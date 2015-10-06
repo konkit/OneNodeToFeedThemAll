@@ -16,7 +16,16 @@ module.exports = function(passport) {
             return done(err);
           }
 
-          createNewUser = function() {
+          if (user) {
+            if (!user.twitter.token) {
+              fillMissingToken();
+            }
+            return done(null, user);
+          } else {
+            createNewUser();
+          }
+
+          function createNewUser() {
             var newUser                 = new User();
 
             newUser.twitter.id          = profile.id;
@@ -33,7 +42,7 @@ module.exports = function(passport) {
             });
           }
 
-          fillMissingToken = function() {
+          function fillMissingToken() {
             user.twitter.token       = token;
             user.twitter.tokenSecret = tokenSecret;
             user.twitter.username    = profile.username;
@@ -47,20 +56,16 @@ module.exports = function(passport) {
             });
           }
 
-          if (user) {
-            if (!user.twitter.token) {
-              fillMissingToken();
-            }
-            return done(null, user);
-          } else {
-            createNewUser();
-          }
         });
       } else {
-        User.findOne({ 'twitter.id' : profile.id }, function(err, user) {
+        User.findOne({ 'twitter.id' : profile.id }, function(err, prevUser) {
+          if( err) { return; }
+          if( prevUser == null ) { return; }
+
           // Remove old user with this twitter data
-          if( !user._id.equals(req.user._id)) {
-            user.remove();
+          if( !prevUser._id.equals(req.user._id)) {
+            prevUser.twitter.token = undefined;
+        		prevUser.save();
           }
         });
 

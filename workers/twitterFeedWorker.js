@@ -1,4 +1,4 @@
-module.exports = function(timeout) {
+(function() {
   var restler = require('restler');
   var mongoose = require('mongoose');
   var Twit = require('twit')
@@ -13,7 +13,7 @@ module.exports = function(timeout) {
   intervalFunction();
   setInterval(function() { intervalFunction(); }, timeout);
 
-  function intervalFunction() {
+  exports.run = function() {
     console.log('Fetching from Twitter');
 
     User.find({}, function(err, users) {
@@ -41,12 +41,14 @@ module.exports = function(timeout) {
       savePosts(data, user)
     });
   }
+  //exports.getTwitterFeed = getTwitterFeed;
 
   function savePosts(data, user) {
     async.forEach(data, function(post) {
       saveOnePost(post, user)
     });
   }
+  //exports.savePosts = savePosts;
 
   function saveOnePost(post, user) {
     Post.findOneOrCreate({id: post.id, type: 'twitter', user: user}, {
@@ -59,6 +61,7 @@ module.exports = function(timeout) {
       if( err ) console.log('!Error: ' + err)
     });
   }
+  //exports.saveOnePost = saveOnePost;
 
   function getTwitterFetchLib(user) {
     return new Twit({
@@ -68,4 +71,5 @@ module.exports = function(timeout) {
       access_token_secret:  user.twitter.tokenSecret
     });
   }
-}
+  //exports.getTwitterFetchLib = getTwitterFetchLib;
+}())

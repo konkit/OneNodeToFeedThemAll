@@ -1,4 +1,4 @@
-module.exports = function(timeout) {
+(function() {
   var restler = require('restler');
   var mongoose = require('mongoose');
   var FeedParser = require('feedparser'), request = require('request');
@@ -6,14 +6,10 @@ module.exports = function(timeout) {
 
   require('../app/models/post');
 
-  User = mongoose.model('User')
-  Post = mongoose.model('Post')
+  var User = mongoose.model('User')
+  var Post = mongoose.model('Post')
 
-
-  intervalFunction();
-  setInterval(function() { intervalFunction(); }, timeout);
-
-  function intervalFunction() {
+  exports.run = function() {
     console.log('Fetching from RSS');
 
     User.find({}, function(err, users) {
@@ -49,6 +45,7 @@ module.exports = function(timeout) {
       }
     });
   }
+  //exports.getRssFeed = getRssFeed;
 
   function savePost(post, feedUrl, user) {
     Post.findOneOrCreate({id: post.title, type: 'rss', user: user}, {
@@ -68,4 +65,5 @@ module.exports = function(timeout) {
       if( err ) console.log('Post saving error: ' + err)
     })
   }
-}
+  //exports.savePost = savePost;
+}())

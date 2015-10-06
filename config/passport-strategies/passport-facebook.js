@@ -16,7 +16,16 @@ module.exports = function(passport) {
             return done(err);
           }
 
-          createNewUser = function() {
+          if (user) {
+            if (!user.facebook.token) {
+              fillMissingToken();
+            }
+            return done(null, user);
+          } else {
+            createNewUser();
+          }
+
+          function createNewUser() {
             var newUser            = new User();
 
             newUser.facebook.id    = profile.id;
@@ -30,7 +39,7 @@ module.exports = function(passport) {
             });
           }
 
-          fillMissingToken = function() {
+          function fillMissingToken() {
             user.facebook.token = token;
             user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
             user.facebook.email = profile.emails[0].value;
@@ -41,20 +50,16 @@ module.exports = function(passport) {
             });
           }
 
-          if (user) {
-            if (!user.facebook.token) {
-              fillMissingToken();
-            }
-            return done(null, user);
-          } else {
-            createNewUser();
-          }
         });
       } else {
-        User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
-          // Remove old user with this twitter data
-          if( !user._id.equals(req.user._id)) {
-            user.remove();
+        User.findOne({ 'facebook.id' : profile.id }, function(err, prevUser) {
+          if( err) { return; }
+          if( prevUser == null ) { return; }
+          
+          // Remove old user with this facebook data
+          if( !prevUser._id.equals(req.user._id)) {
+            prevUser.facebook.token = undefined;
+        		prevUser.save();
           }
         });
 

@@ -65,4 +65,50 @@ describe('User', function() {
     });
   });
 
+  describe('createFacebookUser', function() {
+    var profile = {
+      id: '1234',
+      name: {
+        givenName: 'John',
+        familyName: 'Cocker'
+      },
+      emails: [{value: 'asdf@asdf.com'}]
+    }
+    var token = 'asdfg'
+
+    it('should create user and return promise', function(done) {
+      var user = User.createFacebookUser(profile, token);
+      expect(user).to.eventually.be.fulfilled.and.notify(done)
+    });
+
+    it('should create user with proper facebook id', function(done) {
+      var user = User.createFacebookUser(profile, token);
+      expect(user).to.eventually
+        .have.deep.property('facebook.id', profile.id)
+        .and.notify(done)
+    });
+
+    it('should create user with proper facebook token', function(done) {
+      var user = User.createFacebookUser(profile, token);
+      expect(user).to.eventually
+        .have.deep.property('facebook.token', token)
+        .and.notify(done)
+    });
+
+    it('should create user with proper facebook name', function(done) {
+      var user = User.createFacebookUser(profile, token);
+      var expectedName = profile.name.givenName + ' ' + profile.name.familyName;
+      expect(user).to.eventually
+        .have.deep.property('facebook.name', expectedName)
+        .and.notify(done)
+    });
+
+    it('should create user with proper facebook email', function(done) {
+      var user = User.createFacebookUser(profile, token);
+      expect(user).to.eventually
+        .have.deep.property('facebook.email', profile.emails[0].value)
+        .and.notify(done)
+    });
+  });
+
 });

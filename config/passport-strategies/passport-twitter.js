@@ -17,70 +17,17 @@ module.exports = function(passport) {
           }
 
           if (user) {
-            if (!user.twitter.token) {
-              fillMissingToken();
-            }
-            return done(null, user);
-          } else {
-            createNewUser();
-          }
-
-          function createNewUser() {
-            var newUser                 = new User();
-
-            newUser.twitter.id          = profile.id;
-            newUser.twitter.token       = token;
-            newUser.twitter.tokenSecret = tokenSecret;
-            newUser.twitter.username    = profile.username;
-            newUser.twitter.displayName = profile.displayName;
-
-            newUser.save(function(err) {
-              if (err) {
-                throw err;
-              }
-              return done(null, newUser);
+            user.fillTwitterData(profile, token, tokenSecret).then(function(user) {
+              return done(null, user);
             });
-          }
-
-          function fillMissingToken() {
-            user.twitter.token       = token;
-            user.twitter.tokenSecret = tokenSecret;
-            user.twitter.username    = profile.username;
-            user.twitter.displayName = profile.displayName;
-
-            user.save(function(err) {
-              if (err) {
-                throw err;
-              }
+          } else {
+            User.createTwitterUser(profile, token, tokenSecret).then(function(user) {
               return done(null, user);
             });
           }
-
         });
       } else {
-        User.findOne({ 'twitter.id' : profile.id }, function(err, prevUser) {
-          if( err) { return; }
-          if( prevUser == null ) { return; }
-
-          // Remove old user with this twitter data
-          if( !prevUser._id.equals(req.user._id)) {
-            prevUser.twitter.token = undefined;
-        		prevUser.save();
-          }
-        });
-
-        // link account with twitter
-        var user                 = req.user;
-        user.twitter.id          = profile.id;
-        user.twitter.token       = token;
-        user.twitter.tokenSecret = tokenSecret;
-        user.twitter.username    = profile.username;
-        user.twitter.displayName = profile.displayName;
-
-        user.save(function(err) {
-          if (err) {
-            throw err;
-          }
+        req.user.linkWithTwitter(profile, token, tokenSecret).then(function(user) {
           return done(null, user);
         });
       }

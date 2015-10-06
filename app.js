@@ -38,7 +38,7 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 
 // Starting workers
 rssFeedWorker = require('./workers/rssFeedWorker.js');
-twitterFeedWorker = require('./workers/rssFeedWorker.js');
+twitterFeedWorker = require('./workers/twitterFeedWorker.js');
 postCacheCleaner = require('./workers/postCacheCleaner.js');
 
 rssFeedWorker.run();

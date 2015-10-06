@@ -43,8 +43,7 @@ module.exports = function(passport) {
           return done(null, false, req.flash('localAuthMessage', 'That email is already taken.'));
         }
 
-        if( password != req.body.
-          password_confirmation ) {
+        if( password != req.body.password_confirmation ) {
           return done(null, false, req.flash('localAuthMessage', 'Password and its confirmation do not match.'));
         }
 

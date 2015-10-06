@@ -10,9 +10,6 @@
   User = mongoose.model('User');
   Post = mongoose.model('Post');
 
-  intervalFunction();
-  setInterval(function() { intervalFunction(); }, timeout);
-
   exports.run = function() {
     console.log('Fetching from Twitter');
 
@@ -41,27 +38,12 @@
       savePosts(data, user)
     });
   }
-  //exports.getTwitterFeed = getTwitterFeed;
 
   function savePosts(data, user) {
     async.forEach(data, function(post) {
-      saveOnePost(post, user)
+      Post.saveTwitterPost(post, user)
     });
   }
-  //exports.savePosts = savePosts;
-
-  function saveOnePost(post, user) {
-    Post.findOneOrCreate({id: post.id, type: 'twitter', user: user}, {
-      id: post.id,
-      date: (new Date(post.created_at)).toISOString(),
-      type: 'twitter',
-      feedData: post,
-      user: user
-    }, function(err, post) {
-      if( err ) console.log('!Error: ' + err)
-    });
-  }
-  //exports.saveOnePost = saveOnePost;
 
   function getTwitterFetchLib(user) {
     return new Twit({
@@ -71,5 +53,4 @@
       access_token_secret:  user.twitter.tokenSecret
     });
   }
-  //exports.getTwitterFetchLib = getTwitterFetchLib;
 }())

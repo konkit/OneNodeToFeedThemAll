@@ -17,63 +17,19 @@ module.exports = function(passport) {
           }
 
           if (user) {
-            if (!user.facebook.token) {
-              fillMissingToken();
-            }
-            return done(null, user);
+            user.fillFacebookData(profile, token).then(function(user) {
+              return done(null, user);
+            })
           } else {
-            createNewUser();
-          }
-
-          function createNewUser() {
-            var newUser            = new User();
-
-            newUser.facebook.id    = profile.id;
-            newUser.facebook.token = token;
-            newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-            newUser.facebook.email = profile.emails[0].value;
-
-            newUser.save(function(err) {
-              if (err) { throw err; }
-              return done(null, newUser);
-            });
-          }
-
-          function fillMissingToken() {
-            user.facebook.token = token;
-            user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-            user.facebook.email = profile.emails[0].value;
-
-            user.save(function(err) {
-              if (err) { throw err; }
+            User.createFacebookUser(profile, token).then(function(user) {
               return done(null, user);
             });
           }
-
         });
       } else {
-        User.findOne({ 'facebook.id' : profile.id }, function(err, prevUser) {
-          if( err) { return; }
-          if( prevUser == null ) { return; }
-          
-          // Remove old user with this facebook data
-          if( !prevUser._id.equals(req.user._id)) {
-            prevUser.facebook.token = undefined;
-        		prevUser.save();
-          }
-        });
-
-        // link account with facebook
-        var user            = req.user;
-        user.facebook.id    = profile.id;
-        user.facebook.token = token;
-        user.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName;
-        user.facebook.email = profile.emails[0].value;
-
-        user.save(function(err) {
-          if (err) { throw err; }
+        req.user.linkWithFacebook(profile, token).then(function(user) {
           return done(null, user);
-        });
+        })
       }
     });
   }));

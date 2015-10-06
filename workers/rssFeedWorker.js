@@ -35,35 +35,14 @@
     });
 
     feedparser.on('error', function(errorMsg) {
-      errorCallback(errorMsg);
+      console.log('Error: ' + errorMsg);
     });
 
     feedparser.on('readable', function() {
       var stream = this, meta = this.meta, item;
       while (post = stream.read()) {
-        savePost(post, feedUrl, user);
+        Post.saveRssPost(post, feedUrl, user);
       }
     });
   }
-  //exports.getRssFeed = getRssFeed;
-
-  function savePost(post, feedUrl, user) {
-    Post.findOneOrCreate({id: post.title, type: 'rss', user: user}, {
-      id: post.title,
-      date: (new Date(post.pubDate)).toISOString(),
-      type: 'rss',
-      rssUrl: feedUrl.url,
-      feedData: {
-        channelName: '',
-        pubDate: post.pubDate,
-        title: post.title,
-        link: post.link,
-        description: post.description
-      },
-      user: user
-    }, function(err, createdPost) {
-      if( err ) console.log('Post saving error: ' + err)
-    })
-  }
-  //exports.savePost = savePost;
 }())

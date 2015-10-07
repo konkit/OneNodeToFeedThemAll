@@ -43,8 +43,17 @@ module.exports = function(passport) {
           return done(null, false, req.flash('localAuthMessage', 'That email is already taken.'));
         }
 
+        var regexp = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        if( !email.match(regexp) ) {
+          return done(null, false, req.flash('localAuthMessage', 'Wrong format of email.'));
+        }
+
         if( password != req.body.password_confirmation ) {
           return done(null, false, req.flash('localAuthMessage', 'Password and its confirmation do not match.'));
+        }
+
+        if( password.length < 6 ) {
+          return done(null, false, req.flash('localAuthMessage', 'Password is too short.'));
         }
 
         if(req.user) {

@@ -54,7 +54,7 @@ setInterval(function() {
 postCacheCleaner.run();
 setInterval(function() {
   postCacheCleaner.run();
-}, 1000 * 3600 * 6);
+}, 1000 * 3600 * 1);
 
 
 // launch

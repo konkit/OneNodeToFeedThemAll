@@ -59,6 +59,7 @@ userSchema.methods.fillTwitterData = function(profile, token, tokenSecret) {
   return this.save();
 }
 
+// When user is authenticated and we are just performing connection to account
 userSchema.methods.linkWithTwitter = function(profile, token, tokenSecret) {
   User.findOne({ 'twitter.id' : profile.id }, function(err, prevUser) {
     if( err || prevUser == null ) { return; }
@@ -108,6 +109,7 @@ userSchema.methods.fillFacebookData = function(profile, token) {
   return this.save();
 }
 
+// When user is authenticated and we are just performing connection to account
 userSchema.methods.linkWithFacebook = function(profile, token) {
   User.findOne({ 'facebook.id' : profile.id }, function(err, prevUser) {
     if( err || prevUser == null ) { return; }

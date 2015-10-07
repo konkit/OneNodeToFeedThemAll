@@ -56,7 +56,6 @@ setInterval(function() {
   postCacheCleaner.run();
 }, 1000 * 3600 * 1);
 
-
 // launch
 app.listen(port);
 console.log('The magic happens on port ' + port);

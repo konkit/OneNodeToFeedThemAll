@@ -41,9 +41,7 @@
     feedparser.on('readable', function() {
       var stream = this, meta = this.meta, item;
       while (post = stream.read()) {
-        Post.saveRssPost(post, feedUrl, user).then(function(err, createdPost) {
-          if( err ) console.log('Post saving error: ' + err)
-        })
+        Post.saveRssPost(post, feedUrl, user)
       }
     });
   }

@@ -1,5 +1,6 @@
-var mongoose = require('mongoose');
-var findOneOrCreate = require('mongoose-find-one-or-create')
+var Promise = require("bluebird"),
+    mongoose = Promise.promisifyAll(require('mongoose')),
+    findOneOrCreate = require('mongoose-find-one-or-create')
 
 var User = require('./user')
 
@@ -15,7 +16,8 @@ var postSchema = mongoose.Schema({
 postSchema.plugin(findOneOrCreate);
 
 postSchema.statics.saveRssPost = function(post, feedUrl, user) {
-  Post.findOneOrCreate({id: post.title, type: 'rss', user: user}, {
+  var findData = {id: post.title, type: 'rss', user: user};
+  var createData = {
     id: post.title,
     date: (new Date(post.pubDate)).toISOString(),
     type: 'rss',
@@ -28,9 +30,38 @@ postSchema.statics.saveRssPost = function(post, feedUrl, user) {
       description: post.description
     },
     user: user
-  }, function(err, createdPost) {
-    if( err ) console.log('Post saving error: ' + err)
-  })
+  }
+
+  return new Promise(function(resolve, reject) {
+    Post.findOne(findData, function(err, post) {
+      if( post == null ) {
+        Post.create(createData, function(err, newPost) {
+          if(err) { throw err; }
+          resolve(newPost);
+        });
+      } else {
+        if(err) { throw err; }
+        resolve(post);
+      }
+    });
+  });
+
+  // Post.findOneOrCreate({id: post.title, type: 'rss', user: user}, {
+  //   id: post.title,
+  //   date: (new Date(post.pubDate)).toISOString(),
+  //   type: 'rss',
+  //   rssUrl: feedUrl.url,
+  //   feedData: {
+  //     channelName: '',
+  //     pubDate: post.pubDate,
+  //     title: post.title,
+  //     link: post.link,
+  //     description: post.description
+  //   },
+  //   user: user
+  // }, function(err, createdPost) {
+  //   if( err ) console.log('Post saving error: ' + err)
+  // })
 }
 
 postSchema.statics.saveTwitterPost = function(post, user) {

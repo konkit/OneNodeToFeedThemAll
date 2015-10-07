@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
     }
 
     User.findById(req.session.passport.user, function(err, user) {
-      if( err ) console.log(err);
+      if( err || user == null ) console.log(err);
 
       var possibleTypes = [];
       if( req.query.tw == 'true' ) {
